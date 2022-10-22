@@ -1,49 +1,50 @@
 import fs from 'fs';
+import path from 'path';
 import _ from 'lodash';
-
-console.log(process.cwd());
-
-const readFile = (filepath) => fs.readFileSync(process.cwd() + filepath, 'utf-8');
 
 const getExtension = (filename) => filename.split('.')[fileName.length - 1];
 
-const filePath1 = '/file1.json';
-const filePath2 = '/file2.json';
+const readFile = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
 
-const data1 = JSON.parse(readFile(filePath1));
-const data2 = JSON.parse(readFile(filePath2));
+const genDiff = (oldFile, newFile) => {
+  // Читаем файлы
+  const oldData = JSON.parse(readFile(oldFile));
+  const newData = JSON.parse(readFile(newFile));
 
-console.log(data1.host);
-console.log(data2.host);
+  // Берем собираем ключи
+  const oldKeys= Object.keys(oldData);
+  const newKeys = Object.keys(newData);
 
+  // Делаем один массив уникальных ключей и сортируем
+  const sortedKeys = _.union(oldKeys, newKeys).sort();
 
-const keys1 = Object.keys(data1);
-const keys2 = Object.keys(data2);
+  let res = '{\n';
 
-const sortedKeys = _.union(keys1, keys2).sort();
-
-let res = '{\n';
-
-sortedKeys.map((key) => {
-  // console.log(data1[key]);
-  let str = '';
-  if (key in data1 === false) {
-    str = ` + ${key}: ${data2[key]}\n`;
-  }
-  if (key in data1) {
-    if (data1[key] === data2[key]) {
-      str = `   ${key}: ${data2[key]}\n`;
-    } else {
-      if (key in data2 === false) {
-        str = ` - ${key}: ${data1[key]}\n`;
+  sortedKeys.map((key) => {
+    let str = '';
+    // ключа нет в старом файле
+    if (key in oldData === false) {
+      str = `\t+ ${key}: ${newData[key]}\n`;
+    }
+    if (key in oldData) {
+      // Значение по ключу не изменилось
+      if (oldData[key] === newData[key]) {
+        str = `\t  ${key}: ${newData[key]}\n`;
       } else {
-        str = ` - ${key}: ${data1[key]}\n + ${key}: ${data2[key]}\n`;
+        if (key in newData === false) {
+          // Нет ключа в новом файле
+          str = `\t- ${key}: ${oldData[key]}\n`;
+        } else {
+          str = `\t- ${key}: ${oldData[key]}\n\t+ ${key}: ${newData[key]}\n`;
+        }
       }
     }
-  }
-  res += str;
-});
+    res += str;
+  });
 
-res += '}';
+  res += '}';
 
-console.log(res);
+  return res;
+}
+
+export default genDiff;
