@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 
-const getExtension = (filename) => filename.split('.')[fileName.length - 1];
+// const getExtension = (filename) => filename.split('.')[fileName.length - 1];
 
 const readFile = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
 
@@ -12,7 +12,7 @@ const genDiff = (oldFile, newFile) => {
   const newData = JSON.parse(readFile(newFile));
 
   // Берем собираем ключи
-  const oldKeys= Object.keys(oldData);
+  const oldKeys = Object.keys(oldData);
   const newKeys = Object.keys(newData);
 
   // Делаем один массив уникальных ключей и сортируем
@@ -30,21 +30,20 @@ const genDiff = (oldFile, newFile) => {
       // Значение по ключу не изменилось
       if (oldData[key] === newData[key]) {
         str = `\t  ${key}: ${newData[key]}\n`;
+      } else if (key in newData === false) {
+        // Нет ключа в новом файле
+        str = `\t- ${key}: ${oldData[key]}\n`;
       } else {
-        if (key in newData === false) {
-          // Нет ключа в новом файле
-          str = `\t- ${key}: ${oldData[key]}\n`;
-        } else {
-          str = `\t- ${key}: ${oldData[key]}\n\t+ ${key}: ${newData[key]}\n`;
-        }
+        str = `\t- ${key}: ${oldData[key]}\n\t+ ${key}: ${newData[key]}\n`;
       }
     }
     res += str;
+    return res;
   });
 
   res += '}';
 
   return res;
-}
+};
 
 export default genDiff;
