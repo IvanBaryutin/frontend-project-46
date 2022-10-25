@@ -2,8 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 
-// const getExtension = (filename) => filename.split('.')[fileName.length - 1];
-
 const readFile = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
 
 const genDiff = (oldFile, newFile) => {
@@ -18,50 +16,24 @@ const genDiff = (oldFile, newFile) => {
   // Делаем один массив уникальных ключей и сортируем
   const sortedKeys = _.union(oldKeys, newKeys).sort();
 
-  // let res = '{\n';
-
-  /*
-  sortedKeys.map((key) => {
-    let str = '';
-    // ключа нет в старом файле
-    if (key in oldData === false) {
-      str = `\t+ ${key}: ${newData[key]}\n`;
-    }
-    if (key in oldData) {
-      // Значение по ключу не изменилось
-      if (oldData[key] === newData[key]) {
-        str = `\t  ${key}: ${newData[key]}\n`;
-      } else if (key in newData === false) {
-        // Нет ключа в новом файле
-        str = `\t- ${key}: ${oldData[key]}\n`;
-      } else {
-        str = `\t- ${key}: ${oldData[key]}\n\t+ ${key}: ${newData[key]}\n`;
-      }
-    }
-    res += str;
-    return res;
-  });
-  */
   const result = sortedKeys.reduce((str, key) => {
     let res = '';
     if (key in oldData === false) {
-      res = `${str}\t+ ${key}: ${newData[key]}\n`;
+      res = `${str}  + ${key}: ${newData[key]}\n`;
     }
     if (key in oldData) {
       // Значение по ключу не изменилось
       if (oldData[key] === newData[key]) {
-        res = `${str}\t  ${key}: ${newData[key]}\n`;
+        res = `${str}    ${key}: ${newData[key]}\n`;
       } else if (key in newData === false) {
         // Нет ключа в новом файле
-        res = `${str}\t- ${key}: ${oldData[key]}\n`;
+        res = `${str}  - ${key}: ${oldData[key]}\n`;
       } else {
-        res = `${str}\t- ${key}: ${oldData[key]}\n\t+ ${key}: ${newData[key]}\n`;
+        res = `${str}  - ${key}: ${oldData[key]}\n  + ${key}: ${newData[key]}\n`;
       }
     }
     return res;
   }, '');
-
-  // res += '}';
 
   return `{\n${result}}`;
 };
