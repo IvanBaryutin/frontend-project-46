@@ -1,13 +1,15 @@
 import fs from 'fs';
 import path from 'path';
+import parseData from './parsers.js';
 import _ from 'lodash';
 
 const readFile = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
+const getFileExt = (filename) => filename.split('.').pop();
 
 const genDiff = (oldFile, newFile) => {
-  // Читаем файлы
-  const oldData = JSON.parse(readFile(oldFile));
-  const newData = JSON.parse(readFile(newFile));
+  // Парсим файлы
+  const oldData = parseData(readFile(oldFile), getFileExt(oldFile));
+  const newData = parseData(readFile(newFile), getFileExt(newFile));
 
   // Берем собираем ключи
   const oldKeys = Object.keys(oldData);
