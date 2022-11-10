@@ -25,4 +25,3 @@ test('test two yaml files', () => {
   const actual = genDiff(getFixturePath('testFile1.yml'), getFixturePath('testFile2.yml'));
   expect(actual).toEqual(expected);
 });
-
