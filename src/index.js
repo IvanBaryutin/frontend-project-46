@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import _ from 'lodash';
 import parseData from './parsers.js';
 import makeAST from './makeAST.js';
 import formatData from './formatters/index.js';
@@ -12,10 +11,8 @@ const genDiff = (oldFile, newFile, formatter = 'stylish') => {
   const oldData = parseData(readFile(oldFile), getFileExt(oldFile));
   const newData = parseData(readFile(newFile), getFileExt(newFile));
   const ast = makeAST(oldData, newData);
-  // console.log('AST');
-  console.log(JSON.stringify(ast, null, 2));
+  // console.log(JSON.stringify(ast, null, 2));
   return formatData(ast, formatter);
-  // return
 };
 /*
 const genDiff = (oldFile, newFile) => {
