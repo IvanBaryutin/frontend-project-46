@@ -3,7 +3,8 @@ import _ from 'lodash';
 const makeAST = (oldData, newData) => {
   const oldKeys = Object.keys(oldData);
   const newKeys = Object.keys(newData);
-  const sortedKeys = _.union(oldKeys, newKeys).sort();
+  // const sortedKeys = _.union(oldKeys, newKeys).sort();
+  const sortedKeys = _.sortBy(_.union(oldKeys, newKeys).sort());
 
   const result = sortedKeys.map((key) => {
     // Значение одного и того же ключа в обеих структурах — объект, строим children

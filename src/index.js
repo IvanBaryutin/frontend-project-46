@@ -5,7 +5,8 @@ import makeAST from './makeAST.js';
 import formatData from './formatters/index.js';
 
 const readFile = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
-const getFileExt = (filename) => filename.split('.').pop();
+// const getFileExt = (filename) => filename.split('.').pop();
+const getFileExt = (filename) => filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
 
 const genDiff = (oldFile, newFile, formatter = 'stylish') => {
   const oldData = parseData(readFile(oldFile), getFileExt(oldFile));
