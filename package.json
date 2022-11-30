@@ -4,7 +4,8 @@
   "description": "Shows a difference between two configuration files",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test-coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
