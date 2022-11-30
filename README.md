@@ -16,9 +16,22 @@
     - плоский 'plain'
     - JSON 'json'
 
+
+
+## Как установить
+
+```
+
+$ git clone git@github.com:IvanBaryutin/frontend-project-46.git
+$ cd frontend-project-46
+$ npm link
+```
+
+
 ## Как пользоваться
 
 ```
+
 # Вызвать помощь
 gendiff -h
 
