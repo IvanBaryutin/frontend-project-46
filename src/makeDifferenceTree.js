@@ -1,53 +1,53 @@
 import _ from 'lodash';
 
-const makeAST = (oldData, newData) => {
-  const oldKeys = Object.keys(oldData);
-  const newKeys = Object.keys(newData);
-  // const sortedKeys = _.union(oldKeys, newKeys).sort();
-  const sortedKeys = _.sortBy(_.union(oldKeys, newKeys));
+const makeDifferenceTree = (data1, data2) => {
+  const keys1 = Object.keys(data1);
+  const keys2 = Object.keys(data2);
+  const sortedKeys = _.sortBy(_.union(keys1, keys2));
 
   const result = sortedKeys.map((key) => {
     // Значение одного и того же ключа в обеих структурах — объект, строим children
-    if (typeof oldData[key] === 'object' && typeof newData[key] === 'object') {
+    // if (typeof data1[key] === 'object' && typeof data2[key] === 'object') {
+    if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
       return {
         key,
         type: 'nested',
-        children: makeAST(oldData[key], newData[key]),
+        children: makeDifferenceTree(data1[key], data2[key]),
       };
     }
     // Нет ключа в исходной структуре: добавлено
-    if (key in oldData === false) {
+    if (!_.has(data1, key)) {
       return {
         key,
         type: 'added',
-        value: newData[key],
+        value: data2[key],
       };
     }
     // Нет ключа в новой структуре: удалено
-    if (key in newData === false) {
+    if (!_.has(data2, key)) {
       return {
         key,
         type: 'removed',
-        value: oldData[key],
+        value: data1[key],
       };
     }
     // Значения по ключу отличаются
-    if (oldData[key] !== newData[key]) {
+    if (data1[key] !== data2[key]) {
       return {
         key,
         type: 'modified',
-        firstValue: oldData[key],
-        secondValue: newData[key],
+        firstValue: data1[key],
+        secondValue: data2[key],
       };
     }
     // Иначе значение не менялось, добавляем как есть.
     return {
       key,
       type: 'notModified',
-      value: oldData[key],
+      value: data1[key],
     };
   });
   return result;
 };
 
-export default makeAST;
+export default makeDifferenceTree;

@@ -4,7 +4,6 @@ import formatDataToJSON from './json.js';
 
 const formatData = (ast, format) => {
   if (format === 'stylish') {
-    // console.log(ast);
     return formatDataToStylish(ast);
   }
   if (format === 'plain') {

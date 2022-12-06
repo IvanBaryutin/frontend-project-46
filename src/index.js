@@ -1,18 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import parseData from './parsers.js';
-import makeAST from './makeAST.js';
+import makeDifferenceTree from './makeDifferenceTree.js';
 import formatData from './formatters/index.js';
 
 const readFile = (filepath) => fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
-// const getFileExt = (filename) => filename.split('.').pop();
-const getFileExt = (filename) => filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
+const getExtension = (filename) => path.extname(filename).split('.')[1];
 
-const genDiff = (oldFile, newFile, formatter = 'stylish') => {
-  const oldData = parseData(readFile(oldFile), getFileExt(oldFile));
-  const newData = parseData(readFile(newFile), getFileExt(newFile));
-  const ast = makeAST(oldData, newData);
-  return formatData(ast, formatter);
+const genDiff = (file1, file2, format = 'stylish') => {
+  const data1 = parseData(readFile(file1), getExtension(file1));
+  const data2 = parseData(readFile(file2), getExtension(file2));
+  const ast = makeDifferenceTree(data1, data2);
+  return formatData(ast, format);
 };
 
 export default genDiff;
