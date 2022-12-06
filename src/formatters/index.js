@@ -1,18 +1,20 @@
-import formatDataToStylish from './stylish.js';
-import formatDataToPlain from './plane.js';
-import formatDataToJSON from './json.js';
+import formatStylish from './stylish.js';
+import formatPlain from './plane.js';
 
 const formatData = (ast, format) => {
-  if (format === 'stylish') {
-    return formatDataToStylish(ast);
+  switch (format) {
+    case 'stylish': {
+      return formatStylish(ast);
+    }
+    case 'plain': {
+      return formatPlain(ast);
+    }
+    case 'json': {
+      return JSON.stringify(ast);
+    }
+    default:
+      throw new Error(`Not supported format'${format}'`);
   }
-  if (format === 'plain') {
-    return formatDataToPlain(ast);
-  }
-  if (format === 'json') {
-    return formatDataToJSON(ast);
-  }
-  throw new Error(`Not supported format'${format}'`);
 };
 
 export default formatData;

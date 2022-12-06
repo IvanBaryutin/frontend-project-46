@@ -8,28 +8,20 @@ const stringify = (value) => {
   return value;
 };
 
-const formatDataToPlain = (tree) => {
-  // tree.filter((el) => el.type !== 'notModified');
+const formatPlain = (tree) => {
   const iter = (data, ancestry) => {
-    // console.log(ancestry);
-    // console.log(data);
     const lines = data.map((node) => {
-      // console.log(ancestry);
-      // console.log(node);
       const newAncestry = ancestry.length > 0 ? `${ancestry}.${node.key}` : node.key;
       switch (node.type) {
         case 'added':
           return `Property '${newAncestry}' was added with value: ${stringify(node.value)}`;
         case 'removed':
           return `Property '${newAncestry}' was removed`;
-        case 'notModified':
+        case 'unChanged':
           return null;
-        case 'modified':
-          return `Property '${newAncestry}' was updated. From ${stringify(node.firstValue)} to ${stringify(node.secondValue)}`;
+        case 'changed':
+          return `Property '${newAncestry}' was updated. From ${stringify(node.value1)} to ${stringify(node.value2)}`;
         case 'nested': {
-          // console.log(ancestry);
-          // const newAncestry = (ancestry == '') ? node.key : `${ancestry}.${node.key}`;
-          // const newAncestry = `test`;
           return iter(node.children, newAncestry);
         }
         default:
@@ -43,4 +35,4 @@ const formatDataToPlain = (tree) => {
 
   return iter(tree, '');
 };
-export default formatDataToPlain;
+export default formatPlain;

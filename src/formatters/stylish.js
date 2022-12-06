@@ -15,22 +15,20 @@ const stringify = (value, depth) => {
   ].join('\n');
 };
 
-const formatDataToStylish = (tree) => {
+const formatStylish = (tree) => {
   const iter = (data, depth) => {
-    // console.log(depth);
-    // console.log(data);
     const lines = data.map((node) => {
       switch (node.type) {
         case 'added':
           return `${valueIndent(depth)}+ ${node.key}: ${stringify(node.value, depth + 1)}`;
         case 'removed':
           return `${valueIndent(depth)}- ${node.key}: ${stringify(node.value, depth + 1)}`;
-        case 'notModified':
+        case 'unChanged':
           return `${valueIndent(depth)}  ${node.key}: ${stringify(node.value, depth + 1)}`;
-        case 'modified':
+        case 'changed':
           return [
-            `${valueIndent(depth)}- ${node.key}: ${stringify(node.firstValue, depth + 1)}`,
-            `${valueIndent(depth)}+ ${node.key}: ${stringify(node.secondValue, depth + 1)}`,
+            `${valueIndent(depth)}- ${node.key}: ${stringify(node.value1, depth + 1)}`,
+            `${valueIndent(depth)}+ ${node.key}: ${stringify(node.value2, depth + 1)}`,
           ].join('\n');
         case 'nested':
           return `${valueIndent(depth)}  ${node.key}: ${iter(node.children, depth + 1)}`;
@@ -47,4 +45,4 @@ const formatDataToStylish = (tree) => {
 
   return iter(tree, 0);
 };
-export default formatDataToStylish;
+export default formatStylish;

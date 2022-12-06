@@ -7,7 +7,6 @@ const makeDifferenceTree = (data1, data2) => {
 
   const result = sortedKeys.map((key) => {
     // Значение одного и того же ключа в обеих структурах — объект, строим children
-    // if (typeof data1[key] === 'object' && typeof data2[key] === 'object') {
     if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
       return {
         key,
@@ -32,18 +31,18 @@ const makeDifferenceTree = (data1, data2) => {
       };
     }
     // Значения по ключу отличаются
-    if (data1[key] !== data2[key]) {
+    if (!_.isEqual(data1[key], data2[key])) {
       return {
         key,
-        type: 'modified',
-        firstValue: data1[key],
-        secondValue: data2[key],
+        type: 'changed',
+        value1: data1[key],
+        value2: data2[key],
       };
     }
     // Иначе значение не менялось, добавляем как есть.
     return {
       key,
-      type: 'notModified',
+      type: 'unChanged',
       value: data1[key],
     };
   });
