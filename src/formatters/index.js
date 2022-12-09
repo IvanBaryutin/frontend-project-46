@@ -1,8 +1,8 @@
 import formatStylish from './stylish.js';
 import formatPlain from './plane.js';
 
-const formatData = (ast, format) => {
-  switch (format) {
+const format = (ast, outFormat) => {
+  switch (outFormat) {
     case 'stylish': {
       return formatStylish(ast);
     }
@@ -13,8 +13,8 @@ const formatData = (ast, format) => {
       return JSON.stringify(ast);
     }
     default:
-      throw new Error(`Not supported format'${format}'`);
+      throw new Error(`Not supported format '${outFormat}'`);
   }
 };
 
-export default formatData;
+export default format;
